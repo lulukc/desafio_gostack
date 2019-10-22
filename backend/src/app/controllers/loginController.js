@@ -1,30 +1,33 @@
 import jwt from 'jsonwebtoken';
-import Admim from '../models/Admin';
+import bcrypt from 'bcryptjs';
+import Admin from '../models/Admin';
 import authConfig from '../../config/auth';
 
 class LoginController {
   async store(req, res) {
     const { email, password } = req.body;
-    const admin = Admim.findOne({ where: { email } });
+    const admin = await Admin.findOne({ where: { email: req.body.email } });
 
     if (!admin) {
       return res.status(401).json({ error: 'User not found' });
     }
-    if (!(await Admim.checkPassword(password))) {
+    const compare = await bcrypt.compare(password, admin.password_hash);
+
+    if (!compare) {
       return res.status(401).json({ erro: 'Password does not match' });
     }
     const { id, name } = admin;
     return res.json({
-      user: {
+      admin: {
         id,
         name,
         email,
       },
-      token: jwt.sing({ id }, authConfig.secret, {
+      token: jwt.sign({ id }, authConfig.secret, {
         expiresIn: authConfig.exprireIn,
       }),
     });
   }
 }
 
-export default LoginController;
+export default new LoginController();
