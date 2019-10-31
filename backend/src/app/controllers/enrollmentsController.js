@@ -8,7 +8,7 @@ class SdutensdController {
     const { email_student, name_plan, start_date } = req.body;
 
     if (!name_plan || !start_date || !email_student) {
-      return res.status(400).json({ error: 'Dados insificientes' });
+      return res.status(400).json({ error: 'Insufficient Data' });
     }
 
     const plans = await Plans.findOne({

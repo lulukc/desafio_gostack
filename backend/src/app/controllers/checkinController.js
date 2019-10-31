@@ -1,16 +1,15 @@
-import { subDays, parseISO } from 'date-fns';
+import { subDays } from 'date-fns';
 import Checkins from '../schemas/checkins';
 import Enrollments from '../models/Enrollments';
 
 class CheckinController {
   async index(req, res) {
-    const { date } = req.query;
-    const currentDate = parseISO(date);
+    const currentDate = new Date();
     const sevenDaysAgo = subDays(currentDate, 7);
 
     const checkins = await Checkins.find({
       student_id: req.params.id,
-      checkins_date: {
+      createdAt: {
         $gte: sevenDaysAgo,
         $lte: currentDate,
       },
