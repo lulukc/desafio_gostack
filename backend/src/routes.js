@@ -20,7 +20,11 @@ routes.post('/student/:id/help-orders', helpOrdersController.store);
 routes.get('/plans', plansController.index);
 
 routes.use(authController);
-routes.post('/studentregistration', studentsController.store);
+
+routes.post('/student', studentsController.store);
+routes.get('/student', studentsController.index);
+routes.delete('/student/:id', studentsController.delete);
+routes.put('/student/:id', studentsController.update);
 
 routes.get('/help-orders', helpOrdersController.index);
 routes.put('/help-orders/:id', helpOrdersController.update);
@@ -30,5 +34,6 @@ routes.put('/plans/:id', plansController.update);
 routes.delete('/plans/:id', plansController.delete);
 
 routes.post('/enrollment', enrollmentsController.store);
+routes.get('/enrollment', enrollmentsController.index);
 
 export default routes;

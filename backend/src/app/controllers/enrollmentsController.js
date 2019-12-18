@@ -37,6 +37,13 @@ class SdutensdController {
     });
     return res.json(enrollment);
   }
+
+  async index(req, res) {
+    const enrollments = await Enrollments.findAll({
+      attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
+    });
+    return res.json(enrollments);
+  }
 }
 
 export default new SdutensdController();
