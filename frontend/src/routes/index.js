@@ -21,19 +21,19 @@ export default function Routes() {
       <Route path="/" exact component={Login} />
       <Route path="/studentlist" component={StudentList} isPrivate />
       <Route path="/studentform" component={StudentForm} isPrivate />
-      <Route path="/studentedition" component={StudentEdition} isPrivate />
+      <Route path="/studentedition/:id" component={StudentEdition} isPrivate />
       <Route path="/enrollmentlist" component={EnrollmentList} isPrivate />
       <Route path="/enrollmentform" component={EnrollmentForm} isPrivate />
       <Route
-        path="/enrollmentedition"
+        path="/enrollmentedition/:id"
         component={EnrollmentEdition}
         isPrivate
       />
       <Route path="/planslist" component={PlansList} isPrivate />
       <Route path="/plansform" component={PlansForm} isPrivate />
-      <Route path="/plansedition" component={PlansEdition} isPrivate />
+      <Route path="/plansedition/:id" component={PlansEdition} isPrivate />
       <Route path="/questions" component={Questions} isPrivate />
-      <Route path="/reply" component={Reply} isPrivate />
+      <Route path="/reply/:id" component={Reply} isPrivate />
     </Switch>
   );
 }

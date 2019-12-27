@@ -1,6 +1,9 @@
-import React from 'react';
+/* eslint-disable eqeqeq */
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Form, Input } from '@rocketseat/unform';
 import { MdChevronLeft, MdCheck } from 'react-icons/md';
+import Proptypes from 'prop-types';
 
 import history from '~/services/history';
 import {
@@ -13,21 +16,33 @@ import {
 
 import api from '~/services/api';
 
-export default function StudentEdition() {
+export default function StudentEdition({ match }) {
+  const studentslist = useSelector(state => state.students.studentsList);
+  const [student, setStudent] = useState([]);
+
+  useEffect(() => {
+    const { id } = match.params;
+    const studentFilter = studentslist.filter(students => students.id == id);
+
+    setStudent(studentFilter);
+  }, [match, match.params, studentslist]);
+
   function handleBack() {
     history.push('/studentlist');
   }
   async function handleSubmit(data) {
-    const response = await api.post('student', data);
+    const { id } = student[0];
+    const response = await api.put(`student/${id}`, data);
 
     if (response.data) {
       history.push('/studentlist');
     }
   }
+  console.tron.log(student, 'student');
 
   return (
     <Container>
-      <Form onSubmit={handleSubmit}>
+      <Form initialData={student[0]} onSubmit={handleSubmit}>
         <Header>
           <strong>Edição de aluno</strong>
           <div>
@@ -73,3 +88,11 @@ export default function StudentEdition() {
     </Container>
   );
 }
+
+StudentEdition.propTypes = {
+  match: Proptypes.shape({
+    params: Proptypes.shape({
+      id: Proptypes.string,
+    }),
+  }).isRequired,
+};

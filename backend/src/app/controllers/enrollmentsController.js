@@ -41,6 +41,18 @@ class SdutensdController {
   async index(req, res) {
     const enrollments = await Enrollments.findAll({
       attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
+      include: [
+        {
+          model: Students,
+          as: 'student',
+          attributes: ['name'],
+        },
+        {
+          model: Plans,
+          as: 'plan',
+          attributes: ['title'],
+        },
+      ],
     });
     return res.json(enrollments);
   }

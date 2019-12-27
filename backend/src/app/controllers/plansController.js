@@ -13,6 +13,7 @@ class PlansController {
       duration: Yup.number().required(),
       price: Yup.number().required(),
     });
+
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
