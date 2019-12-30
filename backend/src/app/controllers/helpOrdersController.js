@@ -10,6 +10,13 @@ class HelpOrdersController {
       where: {
         answer_at: null,
       },
+      include: [
+        {
+          model: Students,
+          as: 'student',
+          attributes: ['name'],
+        },
+      ],
     });
 
     return res.json(helpOrders);
@@ -36,7 +43,6 @@ class HelpOrdersController {
         { model: Students, as: 'student', attributes: ['name', 'email'] },
       ],
     });
-
     helpOrders.answer = req.body.answer;
     helpOrders.answer_at = new Date();
 

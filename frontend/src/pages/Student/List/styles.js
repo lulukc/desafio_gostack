@@ -32,13 +32,6 @@ export const Entries = styled.div`
       text-align: center;
     }
   }
-  input {
-    border: 1px solid #dcdcdc;
-    border-radius: 4px;
-    height: 44px;
-    margin: 5px 0 10px;
-    padding: 10px;
-  }
 `;
 
 export const StudentTable = styled.table`

@@ -4,6 +4,7 @@ import history from '~/services/history';
 import api from '~/services/api';
 
 import { loginSuccess, loginFailure } from './actions';
+import { dataRequest } from '../data/actions';
 
 export function* login({ payload }) {
   try {
@@ -16,6 +17,7 @@ export function* login({ payload }) {
     const { admin: user, token } = response.data;
 
     yield put(loginSuccess(token, user));
+    yield put(dataRequest(token));
     history.push('/studentlist');
   } catch (error) {
     toast.error('Email ou senha invalido');

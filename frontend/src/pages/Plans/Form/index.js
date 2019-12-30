@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Input } from '@rocketseat/unform';
+import { useDispatch } from 'react-redux';
 import { MdChevronLeft, MdCheck } from 'react-icons/md';
 
 import history from '~/services/history';
@@ -11,8 +12,10 @@ import {
   SubmitButtons,
 } from './styles';
 import api from '~/services/api';
+import { reloadDataRequest } from '~/store/modules/data/actions';
 
 export default function PlansForm() {
+  const dispatch = useDispatch();
   function handleBack() {
     history.push('/planslist');
   }
@@ -20,6 +23,7 @@ export default function PlansForm() {
     const response = await api.post('plans', data);
 
     if (response.data) {
+      dispatch(reloadDataRequest());
       history.push('/planslist');
     }
   }

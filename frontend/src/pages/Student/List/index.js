@@ -1,32 +1,27 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { MdAdd } from 'react-icons/md';
 
 import api from '~/services/api';
 import { Container, Headers, Entries, StudentTable } from './styles';
-import { studentsRequest } from '~/store/modules/students/actions';
+import { reloadDataRequest } from '~/store/modules/data/actions';
 
 export default function StudentList() {
   const dispatch = useDispatch();
-  const [students, setStudents] = useState([]);
-
-  useEffect(() => {
-    async function getStudents() {
-      const response = await api.get('student');
-      const { data } = response;
-      setStudents(data);
-      dispatch(studentsRequest(data));
-    }
-    getStudents();
-  }, [dispatch]);
+  const students = useSelector(state => state.data.studentsList);
+  const loading = useSelector(state => state.data.loading);
 
   async function handleDelet(id) {
     await api.delete(`student/${id}`);
+    dispatch(reloadDataRequest());
     window.location.reload(false);
   }
 
+  if (loading) {
+    return <h1>caregando</h1>;
+  }
   return (
     <Container>
       <Headers>
@@ -36,7 +31,6 @@ export default function StudentList() {
             <MdAdd size="20px" color="#fff" />
             <Link to="/studentform">Catastrar</Link>
           </button>
-          <input type="text" placeholder="Busca alunos" />
         </Entries>
       </Headers>
       <StudentTable>

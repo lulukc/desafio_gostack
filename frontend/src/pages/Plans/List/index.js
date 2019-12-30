@@ -1,39 +1,28 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { MdAdd } from 'react-icons/md';
 
 import api from '~/services/api';
-import { formatPrice } from '~/util/format';
 import { Container, Headers, Entries, StudentTable } from './styles';
-import { plansRequest } from '~/store/modules/plans/actions';
+import { reloadDataRequest } from '~/store/modules/data/actions';
 
 export default function PlansList() {
   const dispatch = useDispatch();
-  const [plans, setPlans] = useState([]);
-
-  useEffect(() => {
-    async function getStudents() {
-      const response = await api.get('plans');
-      const data = response.data.map(plan => ({
-        ...plan,
-        priceFormatted: formatPrice(plan.price),
-      }));
-      setPlans(data);
-      dispatch(plansRequest(data));
-    }
-    getStudents();
-  }, [dispatch]);
-
-  console.tron.log(typeof plansRequest, 'plans');
+  const plans = useSelector(state => state.data.plansList);
+  const loading = useSelector(state => state.data.loading);
 
   async function handleDelet(id) {
     await api.delete(`plans/${id}`);
+    dispatch(reloadDataRequest());
     window.location.reload(false);
   }
 
+  if (loading) {
+    return <h1>caregando</h1>;
+  }
   return (
     <Container>
       <Headers>

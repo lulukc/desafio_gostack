@@ -1,6 +1,6 @@
 /* eslint-disable eqeqeq */
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Form, Input } from '@rocketseat/unform';
 import { MdChevronLeft, MdCheck } from 'react-icons/md';
 import Proptypes from 'prop-types';
@@ -15,9 +15,11 @@ import {
 } from './styles';
 
 import api from '~/services/api';
+import { reloadDataRequest } from '~/store/modules/data/actions';
 
 export default function StudentEdition({ match }) {
-  const studentslist = useSelector(state => state.students.studentsList);
+  const dispatch = useDispatch();
+  const studentslist = useSelector(state => state.data.studentsList);
   const [student, setStudent] = useState([]);
 
   useEffect(() => {
@@ -35,10 +37,10 @@ export default function StudentEdition({ match }) {
     const response = await api.put(`student/${id}`, data);
 
     if (response.data) {
+      dispatch(reloadDataRequest());
       history.push('/studentlist');
     }
   }
-  console.tron.log(student, 'student');
 
   return (
     <Container>

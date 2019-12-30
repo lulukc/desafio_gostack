@@ -6,7 +6,7 @@ export default reduces => {
     {
       key: 'GYMPOINT',
       storage,
-      whitelist: ['auth', 'user', 'students', 'plans', 'enrollment'],
+      whitelist: ['auth', 'user', 'data'],
     },
     reduces
   );

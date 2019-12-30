@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Form, Input } from '@rocketseat/unform';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { addMonths, format } from 'date-fns';
 import { MdChevronLeft, MdCheck } from 'react-icons/md';
 import Select from 'react-select';
@@ -17,10 +17,11 @@ import {
   SubmitButtons,
 } from './styles';
 import api from '~/services/api';
+import { reloadDataRequest } from '~/store/modules/data/actions';
 
 export default function EnrollmentForm() {
-  const studentsList = useSelector(state => state.students.studentsList);
-  const planList = useSelector(state => state.plans.plansList);
+  const dispatch = useDispatch();
+  const data = useSelector(state => state.data);
   const [date, setDate] = useState(new Date());
   const [optiosStudents, setOptiosStudents] = useState([]);
   const [optiosPlans, setOptiosPlans] = useState([]);
@@ -30,19 +31,20 @@ export default function EnrollmentForm() {
   registerLocale('pt', pt);
 
   useEffect(() => {
+    const { plansList, studentsList } = data;
     const student = studentsList.map(student => ({
       ...student,
       value: student.name,
       label: student.name,
     }));
-    const plan = planList.map(plan => ({
+    const plan = plansList.map(plan => ({
       ...plan,
       value: plan.title,
       label: plan.title,
     }));
     setOptiosStudents(student);
     setOptiosPlans(plan);
-  }, [planList, studentsList]);
+  }, [data]);
 
   function handleChangeDate(date) {
     setDate(date);
@@ -71,13 +73,6 @@ export default function EnrollmentForm() {
     history.push('/enrollmentlist');
   }
   async function handleSubmit() {
-    const data = {
-      selectedOptionStudent,
-      selectedOptionPlan,
-      date,
-    };
-
-    console.tron.log(data);
     const response = await api.post('enrollment', {
       email_student: selectedOptionStudent.email,
       name_plan: selectedOptionPlan.title,
@@ -85,6 +80,7 @@ export default function EnrollmentForm() {
     });
 
     if (response.data) {
+      dispatch(reloadDataRequest());
       history.push('/enrollmentlist');
     }
   }

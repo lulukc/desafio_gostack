@@ -1,7 +1,7 @@
 /* eslint-disable eqeqeq */
 import React, { useEffect, useState } from 'react';
 import { Form, Input } from '@rocketseat/unform';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { MdChevronLeft, MdCheck } from 'react-icons/md';
 import Proptypes from 'prop-types';
 
@@ -15,9 +15,11 @@ import {
 } from './styles';
 
 import api from '~/services/api';
+import { reloadDataRequest } from '~/store/modules/data/actions';
 
 export default function PlansEdition({ match }) {
-  const plansList = useSelector(state => state.plans.plansList);
+  const dispatch = useDispatch();
+  const plansList = useSelector(state => state.data.plansList);
   const [plans, setPlans] = useState([]);
 
   useEffect(() => {
@@ -25,7 +27,6 @@ export default function PlansEdition({ match }) {
     const plansFilter = plansList.filter(plan => plan.id == id);
 
     setPlans(plansFilter);
-    console.tron.log(plansFilter);
   }, [match, match.params, plansList]);
 
   function handleBack() {
@@ -36,6 +37,7 @@ export default function PlansEdition({ match }) {
     const response = await api.put(`plans/${id}`, data);
 
     if (response.data) {
+      dispatch(reloadDataRequest());
       history.push('/planslist');
     }
   }

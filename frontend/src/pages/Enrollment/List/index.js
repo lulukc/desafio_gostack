@@ -1,53 +1,28 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { MdAdd, MdOfflinePin } from 'react-icons/md';
-import { format, parseISO } from 'date-fns';
-import pt from 'date-fns/locale/pt';
 
 import api from '~/services/api';
 import { Container, Headers, Entries, StudentTable } from './styles';
-import { enrollmentRequest } from '~/store/modules/enrollment/actions';
+import { reloadDataRequest } from '~/store/modules/data/actions';
 
 export default function EnrollmentList() {
   const dispatch = useDispatch();
-  const [enrollments, setEnrollments] = useState([]);
-
-  useEffect(() => {
-    async function getEnrollments() {
-      const response = await api.get('enrollment');
-
-      const data = response.data.map(enrollment => ({
-        ...enrollment,
-        startDateFormated: format(
-          parseISO(enrollment.start_date),
-          "dd 'de' MMMM 'de' yyyy",
-          {
-            locale: pt,
-          }
-        ),
-        endDateFormated: format(
-          parseISO(enrollment.end_date),
-          "dd 'de' MMMM 'de' yyyy",
-          {
-            locale: pt,
-          }
-        ),
-      }));
-
-      setEnrollments(data);
-      dispatch(enrollmentRequest(data));
-    }
-    getEnrollments();
-  }, [dispatch]);
+  const enrollments = useSelector(state => state.data.enrollmentList);
+  const loading = useSelector(state => state.data.loading);
 
   async function handleDelet(id) {
     await api.delete(`enrollment/${id}`);
+    dispatch(reloadDataRequest);
     window.location.reload(false);
   }
 
+  if (loading) {
+    return <h1>caregando</h1>;
+  }
   return (
     <Container>
       <Headers>
@@ -85,7 +60,6 @@ export default function EnrollmentList() {
                 )}
               </td>
               <td>
-                <Link to={`/enrollmentedition/${enrollment.id}`}>editar</Link>
                 <button
                   type="button"
                   onClick={() => handleDelet(enrollment.id)}
