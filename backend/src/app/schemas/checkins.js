@@ -6,6 +6,10 @@ const CheckinsSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    checkin_Number: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: true,

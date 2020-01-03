@@ -6,6 +6,17 @@ import AnswerMail from '../jobs/answerMail';
 
 class HelpOrdersController {
   async index(req, res) {
+    const { id } = req.params;
+    if (id) {
+      const helpOrders = await HelpOrders.findAll({
+        where: {
+          student_id: id,
+        },
+        order: [['createdAt', 'DESC']],
+      });
+      return res.json(helpOrders);
+    }
+
     const helpOrders = await HelpOrders.findAll({
       where: {
         answer_at: null,

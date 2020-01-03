@@ -4,16 +4,9 @@ import Enrollments from '../models/Enrollments';
 
 class CheckinController {
   async index(req, res) {
-    const currentDate = new Date();
-    const sevenDaysAgo = subDays(currentDate, 7);
-
     const checkins = await Checkins.find({
       student_id: req.params.id,
-      createdAt: {
-        $gte: sevenDaysAgo,
-        $lte: currentDate,
-      },
-    });
+    }).sort('-createdAt');
 
     return res.json(checkins);
   }
@@ -48,8 +41,13 @@ class CheckinController {
         .json({ error: 'cannot make entries more than 5 times' });
     }
 
+    const checkinNumber = await Checkins.find({
+      student_id,
+    }).countDocuments();
+
     const checkins = await Checkins.create({
       student_id,
+      checkin_Number: checkinNumber + 1,
     });
 
     return res.json(checkins);

@@ -4,6 +4,12 @@ import Enrollments from '../models/Enrollments';
 
 class SdutensdController {
   async index(req, res) {
+    const { id } = req.params;
+    if (id) {
+      const student = await Students.findByPk(id);
+      return res.json(student);
+    }
+
     const student = await Students.findAll();
     return res.json(student);
   }
