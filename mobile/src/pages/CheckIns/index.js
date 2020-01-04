@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Alert, RefreshControl } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Alert, ActivityIndicator } from 'react-native';
 import { useSelector } from 'react-redux';
 import { parseISO, formatDistance, format } from 'date-fns';
 import pt from 'date-fns/locale/pt';
@@ -16,26 +16,14 @@ import {
 } from './styles';
 import { Background } from '~/components/Background';
 
-function wait(timeout) {
-  return new Promise(resolve => {
-    setTimeout(resolve, timeout);
-  });
-}
-
 export default function CheckIns() {
   const student = useSelector(state => state.user.student);
-
+  const [loading, setLoading] = useState(false);
   const [checkins, setCheckins] = useState([]);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-
-    wait(2000).then(() => setRefreshing(false));
-  }, []);
 
   useEffect(() => {
     async function getCheckins() {
+      setLoading(true);
       const { id } = student;
       const response = await api.get(`student/${id}/checkins`);
       const data = response.data.map(checkins => ({
@@ -46,6 +34,7 @@ export default function CheckIns() {
         }),
       }));
       setCheckins(data);
+      setLoading(false);
     }
     getCheckins();
   }, [student]);
@@ -57,25 +46,21 @@ export default function CheckIns() {
       const date = format(new Date(), "dd 'de' MMM 'ás' HH':'mm", {
         locale: pt,
       });
-      Alert.alert(
-        'Novo check-In',
-        `Foi realizado o Check-In no dia ${date}`,
-        [
-          {
-            text: 'OK',
-            onPress: () => onRefresh(),
-          },
-        ],
-        { cancelable: false }
-      );
+      Alert.alert('Novo check-In', `Foi realizado o Check-In no dia ${date}`);
     } catch (error) {
       Alert.alert(
         'Não foi possivel realizar o check-In',
-        `Você so pode realizar 5 check-Ins no periode de 7 dias`,
-        [{ text: 'OK', onPress: () => console.tron.log('OK Pressed') }],
-        { cancelable: false }
+        `Você so pode realizar 5 check-Ins no periode de 7 dias`
       );
     }
+  }
+
+  if (loading) {
+    return (
+      <Background>
+        <ActivityIndicator size="large" color="#fff" />
+      </Background>
+    );
   }
 
   return (
@@ -92,9 +77,6 @@ export default function CheckIns() {
             <CheckinDate>{checkin.timeDistance}</CheckinDate>
           </CheckIn>
         )}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
       />
     </Background>
   );

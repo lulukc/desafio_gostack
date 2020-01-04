@@ -19,6 +19,7 @@ export const CheckinButtonText = styled.Text`
 export const CheckinList = styled.FlatList.attrs({
   showsVerticalScrollIndicator: false,
 })`
+  width: 100%;
   margin-top: 20px;
 `;
 export const CheckIn = styled.View`
