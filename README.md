@@ -1,11 +1,7 @@
 # desafio_gostack
-um sistema de academia desemvolvodo como projeto final do treinamento da rocketseat.
+Um sistema de academia desemvolvodo como projeto final do treinamento da rocketseat.
 
-O back-end desemvolvido em node js com express
-
-O front-end desemvolvido em react js
-
-O mobile desemvolvido em react native
+O back-end foi desemvolvido em node js com express,o front-end foi desemvolvido em react js, o mobile foi desemvolvido em react native
 
 Os bancos de dados que foram utilizados
 Postgresql na V 12
