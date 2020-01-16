@@ -1,5 +1,5 @@
 # desafio_gostack
-Um sistema de academia desemvolvodo como projeto final do treinamento da rocketseat.
+Um sistema de academia desemvolvido como projeto final do treinamento da rocketseat.
 
 O back-end foi desemvolvido em node js com express,o front-end foi desemvolvido em react js, o mobile foi desemvolvido em react native
 
