@@ -1,4 +1,4 @@
-# desafio_gostack
+# Gympoint
 Um sistema de administração para uma academia 
 
 O back-end foi desenvolvido em NodeJS com Express, utilizando sequelize como ORM para o banco de dados Postgresql,
